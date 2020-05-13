@@ -3,9 +3,9 @@
 $start_time = microtime(true);
 
 $path = 'u:/load-xml.loc/xml/';
-$filename = '17.1-EX_XML_EDR_UO_FULL_08.05.2020.xml';
+//$filename = '17.1-EX_XML_EDR_UO_FULL_08.05.2020.xml';
 //$filename = 'uo_full_mini_or.xml';
-//$filename = 'uo_full_mini.xml';
+$filename = 'uo_full_mini.xml';
 
 $xml = new XMLReader();
 $doc = new DOMDocument;
@@ -16,6 +16,9 @@ if (!$xml->open($path . $filename)) {
 
 $subject_fields = require 'config/subject_fields.php';
 $data = $max_size_subject_fields = [];
+$title_record = 'ID' . chr(9) . implode(chr(9), $subject_fields) . PHP_EOL;
+@file_put_contents('u:/load-xml.loc/csv/subjects.csv', $title_record);
+var_dump($title_record);
 
 foreach ($subject_fields as $field) {
     $max_size_subject_fields[$field] = 0;
@@ -39,6 +42,9 @@ while ($xml->name === 'SUBJECT') {
     }
 
     //$data[] = $record;
+    $record_string = implode(chr(9), $record) . PHP_EOL;
+    @file_put_contents('u:/load-xml.loc/csv/subjects.csv', $record_string, FILE_APPEND);
+    var_dump($record_string);
     $xml->next('SUBJECT');
 }
 
