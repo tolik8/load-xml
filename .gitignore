@@ -1,3 +1,5 @@
 /.idea/*
 /xml/*
-/csv/*
+/txt/*
+/info/*
+*log
