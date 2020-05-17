@@ -1,5 +1,6 @@
 <?php
 
+//header('Content-type: text/html; charset=cp1251');
 $start_time = microtime(true);
 
 require 'config/main.php';
@@ -17,20 +18,17 @@ while ($xml->name === 'SUBJECT') {
 
     foreach ($subject_fields as $field) {
         $subject[$field] = $node->xpath($field)[0]->__toString();
-        if (strlen($subject[$field]) > $subject_max[$field]) {
+        /*if (strlen($subject[$field]) > $subject_max[$field]) {
             $subject_max[$field] = strlen($subject[$field]);
-        }
+        }*/
     }
 
     $data['SUBJECTS'] .= implode(chr(9), $subject) . PHP_EOL;
-
     $data['FOUNDERS'] .= getList($id, $founder_max, $node->xpath('FOUNDERS/FOUNDER'));
-
     $data['SIGNERS'] .= getList($id, $signer_max, $node->xpath('SIGNERS/SIGNER'));
-
-    $data['TERMINATION_STARTED_INFO'] .= getData($tsi_fields, $tsi_max, $id, $node, 'TERMINATION_STARTED_INFO');
-
+    $data['TERMINATION_STARTED_INFO'] .= getTerminationStartedInfo($id, $node->xpath('TERMINATION_STARTED_INFO'));
     $data['EXECUTIVE_POWER'] .= getData($ep_fields, $ep_max, $id, $node, 'EXECUTIVE_POWER');
+    $data['ACTIVITY_KINDS'] .= getActivityKind($id, $node->xpath('ACTIVITY_KINDS/ACTIVITY_KIND'));
 
     $count++;
 
@@ -41,7 +39,7 @@ while ($xml->name === 'SUBJECT') {
     }
 
     $xml->next('SUBJECT');
-    if ($count === 10000) {break;}
+    //if ($count === 100000) {break;}
 }
 
 // Save last part
@@ -49,7 +47,7 @@ save_to_txt($data);
 
 $xml->close();
 
-require 'save_info.php';
+//require 'save_info.php';
 
 $time = round(microtime(true) - $start_time, 4);
 

@@ -7,4 +7,5 @@ const PATH = 'u:/load-xml.loc/';
 const XML_PATH = PATH . 'xml/';
 const TXT_PATH = PATH . 'txt/';
 const INFO_PATH = PATH . 'info/';
-const SAVE_EVERY = 5000;
+const SAVE_EVERY = 2000;
+const SAVE_TO_TXT = true;
