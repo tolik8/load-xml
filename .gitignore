@@ -2,4 +2,4 @@
 /xml/*
 /txt/*
 /info/*
-*log
+*.log

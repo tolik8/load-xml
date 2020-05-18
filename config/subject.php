@@ -18,5 +18,5 @@ return [
     'TERMINATION_CANCEL_INFO',
     'CONTACTS',
     'VP_DATES',
-    'CURRENT_AUTHORITY'
+    'CURRENT_AUTHORITY',
 ];

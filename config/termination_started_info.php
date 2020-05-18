@@ -5,5 +5,5 @@ return [
     'REASON',
     'SBJ_STATE',
     'SIGNER_NAME',
-    'CREDITOR_REQ_END_DATE'
+    'CREDITOR_REQ_END_DATE',
 ];
