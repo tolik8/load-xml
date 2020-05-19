@@ -9,3 +9,19 @@ const TXT_PATH = PATH . 'txt/';
 const INFO_PATH = PATH . 'info/';
 const SAVE_EVERY = 2000;
 const SAVE_TO_TXT = true;
+
+$files = [
+    'SUBJECTS',
+    'FOUNDERS',
+    'SIGNERS',
+    'TERMINATION_STARTED_INFO',
+    'BANKRUPTCY_READJUSTMENT_INFO',
+    'EXECUTIVE_POWER',
+    'ACTIVITY_KINDS',
+    'EXCHANGE_DATA',
+    'PREDECESSORS',
+    'ASSIGNEES',
+    'BRANCHES',
+    'BRANCHES_ACTIVITY_KINDS',
+    'BRANCHES_EXCHANGE_DATA',
+];

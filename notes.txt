@@ -1,3 +1,1 @@
-100k - 26 sec xdebug=off subjects, founders, signers, tsi, ep, ak
-все аналогічно але через trim - 27 sec
-замінив функцію GetData на getExecutivePower - 25,5 sec
+1 745 869 records 685 sec xdebug=off
