@@ -24,6 +24,10 @@ foreach ($files as $file) {
     }
 }
 
+$data = clearData($files);
+
+$db = new QueryBuilder($pdo);
+
 // Move to the first node
 /** @noinspection PhpStatementHasEmptyBodyInspection */
 /** @noinspection LoopWhichDoesNotLoopInspection */

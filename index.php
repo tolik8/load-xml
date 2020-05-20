@@ -6,9 +6,11 @@ $start_time = microtime(true);
 require 'config/main.php';
 require 'functions.php';
 require 'get_data.php';
+require 'pdo.php';
+require 'app/QueryBuilder.php';
 require 'init.php';
 
-$data = clearData($files);
+$db->statement('truncate table subjects');
 
 while ($xml->name === 'SUBJECT') {
     $subject = [];
@@ -23,6 +25,7 @@ while ($xml->name === 'SUBJECT') {
             $max['SUBJECTS'][$field] = strlen($subject[$field]);
         }
     }
+    $db->table('subjects')->insert($subject);
 
     $data['SUBJECTS'] .= implode(chr(9), $subject) . PHP_EOL;
 
@@ -66,7 +69,7 @@ $time = round(microtime(true) - $start_time, 0);
 
 // Save to log
 $log_record = date('Y-m-d') . ' ' . date('H:i:s') . '; ' . $count . ' records; ' . $time . ' sec' . PHP_EOL;
-@file_put_contents(PATH . 'load.log', $log_record, FILE_APPEND);
+@file_put_contents(ROOT . '/load.log', $log_record, FILE_APPEND);
 
 echo '<h3>Loading is complete!</h3>';
 
