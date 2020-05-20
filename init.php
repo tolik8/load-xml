@@ -5,8 +5,10 @@ $doc = new DOMDocument;
 $count = $branch_id = 0;
 $fields = $max = [];
 
-if (!$xml->open(XML_PATH . FILENAME)) {
-    die('Failed to open ' . XML_PATH . FILENAME);
+$filename = $_GET['xml'];
+
+if (!$xml->open(XML_PATH . $filename)) {
+    die('Failed to open ' . XML_PATH . $filename);
 }
 
 foreach ($files as $file) {

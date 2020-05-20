@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection ALL */
+
 /*
  * Знак "+" означает что метод покрыт тестами
 
@@ -365,7 +367,8 @@ class QueryBuilder
             $this->errors_count++;
             $error_message = $e->getMessage();
             if ($this->listenSQL) {echo $e->getMessage();}
-            SQLerrorLog::save(debug_backtrace(), [$e->getMessage(), $sql, $data]);
+            //SQLerrorLog::save(debug_backtrace(), [$e->getMessage(), $sql, $data]);
+            d($e->getMessage(), $sql, $data);
         }
 
         if ($this->queryLog) {
@@ -373,7 +376,7 @@ class QueryBuilder
             if ($this->sql_time !== null) {$log_params['time'] = $this->sql_time;}
             if ($error_message !== null) {$log_params['message'] = $error_message;}
 
-            SQLqueryLog::save($this->logName, $log_params);
+            //SQLqueryLog::save($this->logName, $log_params);
         }
 
         return $stmt;
