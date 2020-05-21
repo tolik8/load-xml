@@ -25,6 +25,7 @@
 
     return affected rows
  + ->insert(array $data);
+ + ->insertArray(array $array);
  + ->update(array $dataForUpdate);
  + ->updateOrInsert(array $dataForUpdate);
  + ->delete();
@@ -225,6 +226,13 @@ class QueryBuilder
         return $this->affectedRows;
     }
 
+    public function insertArray(array $array)
+    {
+        foreach ($array as $item) {
+            $this->insert($item);
+        }
+    }
+
     /*
         Пример использования:
     $data = ['id' => '22'];
@@ -384,7 +392,7 @@ class QueryBuilder
 
     protected function insertData(array $data): int
     {
-        $keys = implode(', ', array_keys($data));
+        $keys = '`' . implode('`, `', array_keys($data)) . '`';
         $values = ':' . implode(', :', array_keys($data));
         $sql = 'INSERT INTO ' . $this->tableSQL . ' (' .$keys . ')' . PHP_EOL . 'VALUES (' . $values . ')';
         $stmt = $this->executeSQL($sql, $data);

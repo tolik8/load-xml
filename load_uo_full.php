@@ -10,8 +10,12 @@ require 'pdo.php';
 require 'app/QueryBuilder.php';
 require 'init.php';
 
-$db->statement('truncate table subjects');
-$db->beginTransaction();
+if (SAVE_TO_DB) {
+    foreach ($files as $file) {
+        $db->statement('truncate table ' . $file);
+    }
+    $db->beginTransaction();
+}
 
 while ($xml->name === 'SUBJECT') {
     $subject = [];
@@ -27,26 +31,52 @@ while ($xml->name === 'SUBJECT') {
         }
     }
 
-    $db->table('subjects')->insert($subject);
-
     $data['SUBJECTS'] .= implode(chr(9), $subject) . PHP_EOL;
+    if (SAVE_TO_DB) {
+        $db->table('SUBJECTS')->insert($subject);
+    }
 
-    $data['FOUNDERS'] .= getList($id, $node->xpath('FOUNDERS/FOUNDER'), $max['FOUNDERS']['FOUNDER']);
-    $data['SIGNERS'] .= getList($id, $node->xpath('SIGNERS/SIGNER'), $max['SIGNERS']['SIGNER']);
+    $data_array['FOUNDERS'] = getList($id,  $node->xpath('FOUNDERS/FOUNDER'), 'FOUNDER', $max['FOUNDERS']['FOUNDER']);
+    $data['FOUNDERS'] .= arrayToText($data_array['FOUNDERS']);
 
-    $data['PREDECESSORS'] .= getList2($id, $node->xpath('PREDECESSORS/PREDECESSOR'), $max['PREDECESSORS']);
-    $data['ASSIGNEES'] .= getList2($id, $node->xpath('ASSIGNEES/ASSIGNEE'), $max['ASSIGNEES']);
+    $data_array['SIGNERS'] = getList($id, $node->xpath('SIGNERS/SIGNER'), 'SIGNER', $max['SIGNERS']['SIGNER']);
+    $data['SIGNERS'] .= arrayToText($data_array['SIGNERS']);
 
-    $data['TERMINATION_STARTED_INFO'] .= getTerminationStartedInfo($id, $node->xpath('TERMINATION_STARTED_INFO'), $max['TERMINATION_STARTED_INFO']);
-    $data['BANKRUPTCY_READJUSTMENT_INFO'] .= getBankruptcyReadjustmentInfo($id, $node->xpath('BANKRUPTCY_READJUSTMENT_INFO'), $max['BANKRUPTCY_READJUSTMENT_INFO']);
-    $data['EXECUTIVE_POWER'] .= getExecutivePower($id, $node->xpath('EXECUTIVE_POWER'), $max['EXECUTIVE_POWER']);
+    $data_array['PREDECESSORS'] = getList2($id, $node->xpath('PREDECESSORS/PREDECESSOR'), $max['PREDECESSORS']);
+    $data['PREDECESSORS'] .= arrayToText($data_array['PREDECESSORS']);
 
-    $data['ACTIVITY_KINDS'] .= getActivityKinds($id, $node->xpath('ACTIVITY_KINDS/ACTIVITY_KIND'), $max['ACTIVITY_KINDS']);
-    $data['EXCHANGE_DATA'] .= getExchangeData($id, $node->xpath('EXCHANGE_DATA/EXCHANGE_ANSWER'), $max['EXCHANGE_DATA']);
+    $data_array['ASSIGNEES'] = getList2($id, $node->xpath('ASSIGNEES/ASSIGNEE'), $max['ASSIGNEES']);
+    $data['ASSIGNEES'] .= arrayToText($data_array['ASSIGNEES']);
 
-    $data['BRANCHES'] .= getBranches($id, $branch_id, $node->xpath('BRANCHES/BRANCH'), $max['BRANCHES']);
-    $data['BRANCHES_ACTIVITY_KINDS'] .= getBranchesActivityKinds($id, $branch_id, $node->xpath('BRANCHES/BRANCH/ACTIVITY_KINDS/ACTIVITY_KIND'), $max['BRANCHES_ACTIVITY_KINDS']);
-    $data['BRANCHES_EXCHANGE_DATA'] .= getBranchesExchangeData($id, $branch_id, $node->xpath('BRANCHES/BRANCH/EXCHANGE_DATA/EXCHANGE_ANSWER'), $max['BRANCHES_EXCHANGE_DATA']);
+    $data_array['TERMINATION_STARTED_INFO'] = getTerminationStartedInfo($id, $node->xpath('TERMINATION_STARTED_INFO'), $max['TERMINATION_STARTED_INFO']);
+    $data['TERMINATION_STARTED_INFO'] .= arrayToText($data_array['TERMINATION_STARTED_INFO']);
+
+    $data_array['BANKRUPTCY_READJUSTMENT_INFO'] = getBankruptcyReadjustmentInfo($id, $node->xpath('BANKRUPTCY_READJUSTMENT_INFO'), $max['BANKRUPTCY_READJUSTMENT_INFO']);
+    $data['BANKRUPTCY_READJUSTMENT_INFO'] .= arrayToText($data_array['BANKRUPTCY_READJUSTMENT_INFO']);
+
+    $data_array['EXECUTIVE_POWER'] = getExecutivePower($id, $node->xpath('EXECUTIVE_POWER'), $max['EXECUTIVE_POWER']);
+    $data['EXECUTIVE_POWER'] .= arrayToText($data_array['EXECUTIVE_POWER']);
+
+    $data_array['ACTIVITY_KINDS'] = getActivityKinds($id, $node->xpath('ACTIVITY_KINDS/ACTIVITY_KIND'), $max['ACTIVITY_KINDS']);
+    $data['ACTIVITY_KINDS'] .= arrayToText($data_array['ACTIVITY_KINDS']);
+
+    $data_array['EXCHANGE_DATA'] = getExchangeData($id, $node->xpath('EXCHANGE_DATA/EXCHANGE_ANSWER'), $max['EXCHANGE_DATA']);
+    $data['EXCHANGE_DATA'] .= arrayToText($data_array['EXCHANGE_DATA']);
+
+    $data_array['BRANCHES'] = getBranches($id, $branch_id, $node->xpath('BRANCHES/BRANCH'), $max['BRANCHES']);
+    $data['BRANCHES'] .= arrayToText($data_array['BRANCHES']);
+    $data_array['BRANCHES_ACTIVITY_KINDS'] = getBranchesActivityKinds($id, $branch_id, $node->xpath('BRANCHES/BRANCH/ACTIVITY_KINDS/ACTIVITY_KIND'), $max['BRANCHES_ACTIVITY_KINDS']);
+    $data['BRANCHES_ACTIVITY_KINDS'] .= arrayToText($data_array['BRANCHES_ACTIVITY_KINDS']);
+    $data_array['BRANCHES_EXCHANGE_DATA'] = getBranchesExchangeData($id, $branch_id, $node->xpath('BRANCHES/BRANCH/EXCHANGE_DATA/EXCHANGE_ANSWER'), $max['BRANCHES_EXCHANGE_DATA']);
+    $data['BRANCHES_EXCHANGE_DATA'] .= arrayToText($data_array['BRANCHES_EXCHANGE_DATA']);
+
+    if (SAVE_TO_DB) {
+        foreach ($files as $file) {
+            if ($file !== 'SUBJECTS') {
+                $db->table($file)->insertArray($data_array[$file]);
+            }
+        }
+    }
 
     $count++;
 
@@ -57,10 +87,12 @@ while ($xml->name === 'SUBJECT') {
     }
 
     $xml->next('SUBJECT');
-    //if ($count === 100000) {break;}
+    if ($count === 1000) {break;}
 }
 
-$db->endTransaction();
+if (SAVE_TO_DB) {
+    $db->endTransaction();
+}
 
 // Save last part
 save_to_txt($data);
@@ -69,7 +101,7 @@ $xml->close();
 
 require 'save_info.php';
 
-$time = round(microtime(true) - $start_time, 0);
+$time = round(microtime(true) - $start_time, 4);
 
 // Save to log
 $log_record = date('Y-m-d') . ' ' . date('H:i:s') . '; ' . $count . ' records; ' . $time . ' sec' . PHP_EOL;

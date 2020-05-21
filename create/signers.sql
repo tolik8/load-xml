@@ -1,0 +1,5 @@
+
+CREATE TABLE `SIGNERS` (
+  `ID` bigint(20),
+  `SIGNER` varchar(500)
+) ENGINE=InnoDB DEFAULT CHARSET=cp1251

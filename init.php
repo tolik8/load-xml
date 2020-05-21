@@ -2,7 +2,8 @@
 
 $xml = new XMLReader();
 $doc = new DOMDocument;
-$count = $branch_id = 0;
+$count = 0;
+$branch_id = 1;
 $fields = $max = [];
 
 $filename = $_GET['xml'];

@@ -1,2 +1,2 @@
-1 746 372 records 717 sec (12 min) xdebug=off Work
 1 746 372 records 1147 sec (19.1 min) xdebug=off Zevs - subjects insert
+1 746 372 records 1251 sec (20.9 min) xdebug=off Work - subjects insert

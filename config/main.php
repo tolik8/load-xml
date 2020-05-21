@@ -6,7 +6,8 @@ const XML_PATH = ROOT . '/xml/';
 const TXT_PATH = ROOT . '/txt/';
 const INFO_PATH = ROOT . '/info/';
 const SAVE_EVERY = 2000;
-const SAVE_TO_TXT = false;
+const SAVE_TO_TXT = true;
+const SAVE_TO_DB = true;
 
 $files = [
     'SUBJECTS',

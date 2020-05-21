@@ -1,4 +1,5 @@
-CREATE TABLE `subjects` (
+
+CREATE TABLE `SUBJECTS` (
   `ID` bigint(20) NOT NULL,
   `NAME` varchar(500),
   `SHORT_NAME` varchar(300),

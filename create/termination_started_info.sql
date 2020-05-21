@@ -1,0 +1,9 @@
+
+CREATE TABLE `TERMINATION_STARTED_INFO` (
+  `ID` bigint(20),
+  `OP_DATE` varchar(10),
+  `REASON` varchar(255),
+  `SBJ_STATE` varchar(20),
+  `SIGNER_NAME` varchar(255),
+  `CREDITOR_REQ_END_DATE` varchar(10)
+) ENGINE=InnoDB DEFAULT CHARSET=cp1251

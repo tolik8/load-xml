@@ -38,3 +38,12 @@ function save_to_txt ($data)
         }
     }
 }
+
+function arrayToText ($array)
+{
+    $result = '';
+    foreach ($array as $item) {
+        $result .= implode(chr(9), $item) . PHP_EOL;
+    }
+    return $result;
+}
