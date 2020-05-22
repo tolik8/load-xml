@@ -1,26 +1,15 @@
 <?php
 
 define('ROOT', $_SERVER['DOCUMENT_ROOT']);
+ini_set('max_execution_time', 7200);
 
 const XML_PATH = ROOT . '/xml/';
 const TXT_PATH = ROOT . '/txt/';
 const INFO_PATH = ROOT . '/info/';
-const SAVE_EVERY = 2000;
+const SAVE_EVERY = 1000;
 const SAVE_TO_TXT = true;
 const SAVE_TO_DB = true;
+// Stop after X records
+const STOP = 0;
 
-$files = [
-    'SUBJECTS',
-    'FOUNDERS',
-    'SIGNERS',
-    'TERMINATION_STARTED_INFO',
-    'BANKRUPTCY_READJUSTMENT_INFO',
-    'EXECUTIVE_POWER',
-    'ACTIVITY_KINDS',
-    'EXCHANGE_DATA',
-    'PREDECESSORS',
-    'ASSIGNEES',
-    'BRANCHES',
-    'BRANCHES_ACTIVITY_KINDS',
-    'BRANCHES_EXCHANGE_DATA',
-];
+$tables = require ROOT . '/config/tables.php';

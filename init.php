@@ -12,22 +12,22 @@ if (!$xml->open(XML_PATH . $filename)) {
     die('Failed to open ' . XML_PATH . $filename);
 }
 
-foreach ($files as $file) {
+foreach ($tables as $table) {
     /** @noinspection PhpIncludeInspection */
-    $fields[$file] = require 'config/fields/' . $file . '.php';
-    $title[$file] = 'ID' . chr(9) . implode(chr(9), $fields[$file]) . PHP_EOL;
-    if (strpos($file, 'BRANCHES') === 0) {
-        $title[$file] = 'BRANCH_ID' . chr(9) . $title[$file];
+    $fields[$table] = require 'config/fields/' . $table . '.php';
+    $title[$table] = 'ID' . chr(9) . implode(chr(9), $fields[$table]) . PHP_EOL;
+    if (strpos($table, 'BRANCHES') === 0) {
+        $title[$table] = 'BRANCH_ID' . chr(9) . $title[$table];
     }
-    foreach ($fields[$file] as $field) {
-        $max[$file][$field] = 0;
+    foreach ($fields[$table] as $field) {
+        $max[$table][$field] = 0;
     }
     if (SAVE_TO_TXT) {
-        @file_put_contents(TXT_PATH . strtolower($file) . '.txt', $title[$file]);
+        @file_put_contents(TXT_PATH . strtolower($table) . '.txt', $title[$table]);
     }
 }
 
-$data = clearData($files);
+$data = clearData($tables);
 
 $db = new QueryBuilder($pdo);
 

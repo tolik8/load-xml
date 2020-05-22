@@ -1,9 +1,9 @@
 <?php
 
-foreach ($files as $file) {
-    $info[$file] = '';
-    foreach ($max[$file] as $key => $value) {
-        $info[$file] .= $key . ' ' .$value . PHP_EOL;
+foreach ($tables as $table) {
+    $info[$table] = '';
+    foreach ($max[$table] as $key => $value) {
+        $info[$table] .= $key . ' ' .$value . PHP_EOL;
     }
-    @file_put_contents(INFO_PATH . strtolower($file) . '.txt', $info[$file]);
+    @file_put_contents(INFO_PATH . strtolower($table) . '.txt', $info[$table]);
 }

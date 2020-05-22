@@ -21,11 +21,11 @@ function cp1251($input)
     return iconv('utf-8', 'windows-1251', $input);
 }
 
-function clearData ($files)
+function clearData ($tables)
 {
     $data = [];
-    foreach ($files as $file) {
-        $data[$file] = '';
+    foreach ($tables as $table) {
+        $data[$table] = '';
     }
     return $data;
 }
