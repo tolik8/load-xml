@@ -10,6 +10,6 @@ const SAVE_EVERY = 1000;
 const SAVE_TO_TXT = true;
 const SAVE_TO_DB = true;
 // Stop after X records
-const STOP = 0;
+const STOP = 100;
 
 $tables = require ROOT . '/config/tables.php';

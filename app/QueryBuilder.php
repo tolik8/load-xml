@@ -1,6 +1,6 @@
 <?php
 
-/** @noinspection ALL */
+/** @noinspection PhpUnused */
 
 /*
  * Знак "+" означает что метод покрыт тестами
@@ -77,13 +77,13 @@ class QueryBuilder
         $this->fieldSQL = '*';
     }
 
-    public function statement(string $sql, array $data = []): string
+    public function statement($sql, array $data = [])
     {
         $stmt = $this->executeSQL($sql, $data);
         return $stmt->errorCode();
     }
 
-    public function selectRaw(string $sql, array $data = [])
+    public function selectRaw($sql, array $data = [])
     {
         $this->sql = $sql;
         $this->bindData = $data;
@@ -92,7 +92,7 @@ class QueryBuilder
         return $this;
     }
 
-    public function table(string $tableName)
+    public function table($tableName)
     {
         $this->method = 'Constructor';
         $this->listenSQL = false;
@@ -107,31 +107,31 @@ class QueryBuilder
         return $this;
     }
 
-    public function select(string $fields = '*')
+    public function select($fields = '*')
     {
         $this->fieldSQL = $fields;
         return $this;
     }
 
-    public function where(string $where)
+    public function where($where)
     {
         $this->whereSQL = $where;
         return $this;
     }
 
-    public function groupBy(string $groupBy)
+    public function groupBy($groupBy)
     {
         $this->groupBySQL = $groupBy;
         return $this;
     }
 
-    public function having(string $having)
+    public function having($having)
     {
         $this->havingSQL = $having;
         return $this;
     }
 
-    public function orderBy(string $orderBy)
+    public function orderBy($orderBy)
     {
         $this->orderSQL = $orderBy;
         return $this;
@@ -151,7 +151,7 @@ class QueryBuilder
     }
 
     /* Получить все записи */
-    public function get(): array
+    public function get()
     {
         $sql = $this->getSQL();
         $stmt = $this->executeSQL($sql, $this->bindData);
@@ -160,7 +160,7 @@ class QueryBuilder
     }
 
     /* Получить первую строку */
-    public function first(): array
+    public function first()
     {
         $sql = $this->getSQL();
         $stmt = $this->executeSQL($sql, $this->bindData);
@@ -171,7 +171,7 @@ class QueryBuilder
     }
 
     /* Получить массив значений одного столбца (если два столбца то пара ключ-значение) */
-    public function pluck(string $key = null, string $value = null): array
+    public function pluck($key = null, $value = null)
     {
         if ($key !== null) {
             if ($value === null) {
@@ -200,7 +200,7 @@ class QueryBuilder
     }
 
     /* Получить значение первого столпца первой строки */
-    public function getCell(string $fieldName = '')
+    public function getCell($fieldName = '')
     {
         if ($fieldName !== '') {$this->fieldSQL = $fieldName;}
         $sql = $this->getSQL();
@@ -210,7 +210,7 @@ class QueryBuilder
         return $row[0];
     }
 
-    public function insert(array $data): int
+    public function insert(array $data)
     {
         $this->lastInsertId = 0;
 
@@ -239,7 +239,7 @@ class QueryBuilder
     $update = ['name' => 'qqqq'];
     $affectedRows = $db->table('test')->where('id = :id')->bind($data)->update($update);
     */
-    public function update(array $dataForUpdate): int
+    public function update(array $dataForUpdate)
     {
         $keys = array_keys($dataForUpdate);
         $string = '';
@@ -252,7 +252,7 @@ class QueryBuilder
         return $this->affectedRows;
     }
 
-    public function updateOrInsert(array $dataForUpdate): int
+    public function updateOrInsert(array $dataForUpdate)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->tableSQL . ' WHERE ' . $this->whereSQL;
         $stmt = $this->executeSQL($sql, $this->bindData);
@@ -267,7 +267,7 @@ class QueryBuilder
         return $this->affectedRows;
     }
 
-    public function delete(): int
+    public function delete()
     {
         $string = $this->parametersString($this->bindData);
         /** @noinspection SqlWithoutWhere */
@@ -283,7 +283,7 @@ class QueryBuilder
         return $this->affectedRows;
     }
 
-    public function getErrorsCount(): int
+    public function getErrorsCount()
     {
         return $this->errors_count;
     }
@@ -293,13 +293,13 @@ class QueryBuilder
         return $this->lastInsertId;
     }
 
-    public function getNewGUID(): string
+    public function getNewGUID()
     {
-        $sql = 'SELECT sys_guid() FROM DUAL';
+        $sql = 'SELECT UUID()';
         return $this->selectRaw($sql)->getCell();
     }
 
-    public function getSQL(): string
+    public function getSQL()
     {
         if ($this->method === 'Raw') {return $this->sql;}
 
@@ -317,45 +317,45 @@ class QueryBuilder
         return $this->sql_time;
     }
 
-    public function beginTransaction(): void
+    public function beginTransaction()
     {
         $this->errors_before_transaction = $this->errors_count;
         $this->pdo->beginTransaction();
     }
 
-    public function endTransaction(): void
+    public function endTransaction()
     {
         if ($this->errors_before_transaction === $this->errors_count)
         {$this->pdo->commit();} else {$this->pdo->rollBack();}
     }
 
-    public function commit(): void
+    public function commit()
     {
         $this->pdo->commit();
     }
 
-    public function rollback (): void
+    public function rollback ()
     {
         $this->pdo->rollBack();
     }
 
-    public function enableQueryLog(string $logName): void
+    public function enableQueryLog($logName)
     {
         $this->logName = $logName;
         $this->queryLog = true;
     }
 
-    public function disableQueryLog(): void
+    public function disableQueryLog()
     {
         $this->queryLog = false;
     }
 
-    public function clearQueryLog(string $logName): void
+    public function clearQueryLog($logName)
     {
         file_put_contents(ROOT . '/logs/' . $logName . '.log', '');
     }
 
-    protected function executeSQL(string $sql, array $data = [])
+    protected function executeSQL($sql, array $data = [])
     {
         $stmt = null;
         $start_time = microtime(true);
@@ -390,7 +390,7 @@ class QueryBuilder
         return $stmt;
     }
 
-    protected function insertData(array $data): int
+    protected function insertData(array $data)
     {
         $keys = '`' . implode('`, `', array_keys($data)) . '`';
         $values = ':' . implode(', :', array_keys($data));
@@ -401,7 +401,7 @@ class QueryBuilder
         return $stmt->rowCount();
     }
 
-    protected function parametersString(array $data): string
+    protected function parametersString(array $data)
     {
         $string = '';
         $keys = array_keys($data);
